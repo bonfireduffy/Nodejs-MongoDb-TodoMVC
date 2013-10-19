@@ -10,11 +10,22 @@ var express = require('express')
   , path = require('path')
   , mongoose = require('mongoose')
   , io = require('socket.io')
-  , db = mongoose.connect('mongodb://localhost/todos')
   , Schema = mongoose.Schema
   , ObjectID = Schema.ObjectId
   , Todo = require('./models/todos.js').init(Schema, mongoose);
 
+
+var uristring = process.env.MONGOLAB_URI ||
+                process.env.MONGOHQ_URL ||
+                'mongodb://localhost/todos';
+
+var db = mongoose.connect(uristring, function (err, res) {
+    if (err) {
+        console.log ('ERROR connecting to: ' + uristring + '. ' + err);
+    } else {
+        console.log ('Succeeded connected to: ' + uristring);
+    }
+});
 
 var app = express();
 
